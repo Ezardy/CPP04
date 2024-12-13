@@ -3,7 +3,7 @@
 
 # include "Animal.hpp"
 
-class Dog : Animal {
+class Dog : public Animal {
 public:
 	Dog(void);
 	Dog(const Dog &other);

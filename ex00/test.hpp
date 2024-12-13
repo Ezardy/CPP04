@@ -15,11 +15,13 @@
 		std::cout.rdbuf(oss.rdbuf());
 # define TEST_LOGIC_END\
 		std::cout.rdbuf(old);\
+		if (!success)\
+			std::cout << "VALUES ERROR\n";\
 		success = success && expected == oss.str();\
 		std::cout << oss.str();\
 		if (!success) {\
 			std::cout << "EXPECTED:\n" << expected;\
-			std::cout << _func_name << " failed\n";\
+			std::cout << '(' << _func_name << " failed)\n";\
 		}\
 		return success;\
 	}

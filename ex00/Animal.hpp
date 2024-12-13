@@ -8,7 +8,7 @@ public:
 	Animal(void);
 	Animal(const Animal &other);
 	Animal	&operator=(const Animal &other);
-	~Animal(void);
+	virtual ~Animal(void);
 
 	virtual void		makeSound(void) const;
 	const std::string	&getType(void) const; 

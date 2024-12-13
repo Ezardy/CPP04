@@ -6,13 +6,14 @@ Cat::Cat(void) : Animal("Cat") {
 	std::cout << "Cat default constructor was called\n";
 }
 
-Cat::Cat(const Cat &other) {
-
+Cat::Cat(const Cat &other) : Animal("Cat") {
+	(void)other;
+	std::cout << "Cat copy constructor was called\n";
 }
 
 Cat &Cat::operator=(const Cat &other) {
 	if (this != &other)
-		std::cout << "Cat copy constructor was called\n";
+		std::cout << "Cat copy assignment was called\n";
 	return *this;
 }
 

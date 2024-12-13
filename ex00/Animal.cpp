@@ -7,6 +7,7 @@ Animal::Animal(void) {
 }
 
 Animal::Animal(const Animal &other) {
+	(void)other;
 	std::cout << "Animal copy constructor was called\n";
 }
 
@@ -22,4 +23,12 @@ Animal::~Animal(void) {
 
 Animal::Animal(const std::string type) : type(type) {
 	std::cout << "Animal constructor was called\n";
+}
+
+void	Animal::makeSound(void) const {
+
+}
+
+const std::string	&Animal::getType(void) const {
+	return type;
 }

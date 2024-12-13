@@ -6,13 +6,14 @@ Dog::Dog(void) : Animal("Dog") {
 	std::cout << "Dog default constructor was called\n";
 }
 
-Dog::Dog(const Dog &other) {
-
+Dog::Dog(const Dog &other) : Animal("Dog") {
+	(void)other;
+	std::cout << "Dog copy constructor was called\n";
 }
 
 Dog &Dog::operator=(const Dog &other) {
 	if (this != &other)
-		std::cout << "Dog copy constructor was called\n";
+		std::cout << "Dog copy assignment was called\n";
 	return *this;
 }
 

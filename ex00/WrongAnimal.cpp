@@ -7,6 +7,7 @@ WrongAnimal::WrongAnimal(void) {
 }
 
 WrongAnimal::WrongAnimal(const WrongAnimal &other) {
+	(void)other;
 	std::cout << "WrongAnimal copy constructor was called\n";
 }
 
@@ -22,4 +23,12 @@ WrongAnimal::~WrongAnimal(void) {
 
 WrongAnimal::WrongAnimal(const std::string type) : type(type) {
 	std::cout << "WrongAnimal constructor was called\n";
+}
+
+void	WrongAnimal::makeSound(void) const {
+
+}
+
+const std::string	&WrongAnimal::getType(void) const {
+	return type;
 }
