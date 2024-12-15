@@ -1,5 +1,5 @@
-#ifndef EX01_BRAIN_HPP
-# define EX01_BRAIN_HPP
+#ifndef EX02_BRAIN_HPP
+# define EX02_BRAIN_HPP
 
 # include <string>
 

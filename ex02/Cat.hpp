@@ -1,5 +1,5 @@
-#ifndef EX01_CAT_HPP
-# define EX01_CAT_HPP
+#ifndef EX02_CAT_HPP
+# define EX02_CAT_HPP
 
 # include "AAnimal.hpp"
 # include "Brain.hpp"

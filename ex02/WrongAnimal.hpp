@@ -1,5 +1,5 @@
-#ifndef EX01_WRONGANIMAL_HPP
-# define EX01_WRONGANIMAL_HPP
+#ifndef EX02_WRONGANIMAL_HPP
+# define EX02_WRONGANIMAL_HPP
 
 # include <string>
 
