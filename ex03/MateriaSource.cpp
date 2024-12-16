@@ -26,6 +26,18 @@ void	MateriaSource::learnMateria(AMateria *materia) {
 	}
 }
 
+AMateria*	MateriaSource::createMateria(const std::string &type) {
+	int			i;
+	AMateria	*materia;
+
+	for (i = 0; i < 4 && type != materias[i]->getType(); i += 1);
+	if (i == 4)
+		materia = NULL;
+	else
+		materia = materias[i];
+	return materia;
+}
+
 void	MateriaSource::purgeMaterias(void) {
 	for (int i = 0; i < 4; i += 1) {
 		delete materias[i];
