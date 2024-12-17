@@ -5,7 +5,7 @@
 #include "test.hpp"
 
 static bool	character_default_constructor(void);
-static bool	character_name_constructor(void);
+/*static bool	character_name_constructor(void);
 static bool	character_equip_unequip(void);
 static bool	character_use(void);
 static bool	character_copy_constructor(void);
@@ -15,6 +15,8 @@ static bool	materiasource_learnMateria(void);
 static bool	materiasource_createMateria(void);
 static bool	materiasource_copy_constructor(void);
 static bool	materiasource_copy_assignment(void);
+static bool	ownership(void);
+static bool	default_test(void);*/
 
 int	main() {
 	bool	success = true;
@@ -31,6 +33,8 @@ int	main() {
 	return success;
 }
 
-TEST_LOGIC_START(reuse_materia)
-	Character	matt("Matt");
+TEST_LOGIC_START(character_default_constructor)
+	Character	matt;
+
+	success = matt.getName() == "Unnamed";
 TEST_LOGIC_END

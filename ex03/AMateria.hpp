@@ -19,5 +19,6 @@ public:
 	virtual void		use(ICharacter &target) = 0;
 protected:
 	std::string	type;
+	bool		owned;
 };
 #endif
