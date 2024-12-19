@@ -6,8 +6,8 @@ obj=$(addsuffix .o, $(src))
 test: $(obj)
 	c++ -o $@ $(obj)
 
-iflags=-Wall -Wextra -Werror -std=c++98
-command=c++ $(iflags) -o $@ -c $<
+cflags=-Wall -Wextra -Werror -std=c++98
+command=c++ $(cflags) -o $@ -c $<
 
 main.o: main.cpp AAnimal.hpp Cat.hpp Dog.hpp WrongAnimal.hpp WrongCat.hpp test.hpp Makefile
 	$(command)
@@ -38,5 +38,5 @@ fclean: clean
 
 re: fclean test
 
-debug: iflags+=-g
+debug: cflags+=-g
 debug: test

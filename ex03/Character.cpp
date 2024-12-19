@@ -4,8 +4,12 @@ Character::Character(void) : inventory(), name("Unnamed") {
 
 }
 
-Character::Character(const Character &other) {
+Character::Character(const Character &other) : inventory() {
 	*this = other;
+}
+
+Character::Character(const std::string name) : inventory(), name(name) {
+
 }
 
 Character	&Character::operator=(const Character &other) {
@@ -29,10 +33,11 @@ const std::string	&Character::getName() const {
 }
 
 void	Character::equip(AMateria* m) {
-	if (m) {
+	if (m && !m->isOwned()) {
 		for (int i = 0; i < 4; i += 1) {
 			if (!inventory[i]) {
 				inventory[i] = m;
+				m->setOwned();
 				i = 4;
 			}
 		}
@@ -40,14 +45,15 @@ void	Character::equip(AMateria* m) {
 }
 
 void	Character::unequip(int idx) {
-	if (idx >= 0 && idx < 4)
+	if (idx >= 0 && idx < 4 && inventory[idx]) {
+		inventory[idx]->unsetOwned();
 		inventory[idx] = NULL;
+	}
 }
 
 void	Character::use(int idx, ICharacter& target) {
 	if (idx >= 0 && idx < 4 && inventory[idx]) {
 		inventory[idx]->use(target);
-		delete inventory[idx];
 		inventory[idx] = NULL;
 	}
 }

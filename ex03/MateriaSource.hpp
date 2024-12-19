@@ -3,7 +3,7 @@
 
 # include "IMateriaSource.hpp"
 
-class MateriaSource : IMateriaSource {
+class MateriaSource : public IMateriaSource {
 public:
 	MateriaSource(void);
 	MateriaSource(const MateriaSource &other);
@@ -12,6 +12,7 @@ public:
 
 	void		learnMateria(AMateria *materia);
 	AMateria*	createMateria(const std::string &type);
+	void		freeSlot(unsigned int idx);
 private:
 	void		purgeMaterias(void);
 
