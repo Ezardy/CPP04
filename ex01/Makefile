@@ -1,6 +1,6 @@
 all: test
 
-src=main Animal Cat Dog WrongAnimal WrongCat
+src=main Animal Cat Dog WrongAnimal WrongCat Brain
 obj=$(addsuffix .o, $(src))
 
 test: $(obj)
@@ -25,6 +25,9 @@ Dog.o: Dog.cpp Dog.hpp Animal.hpp Makefile
 	$(command)
 
 WrongCat.o: WrongCat.cpp WrongCat.hpp WrongAnimal.hpp Makefile
+	$(command)
+
+Brain.o: Brain.cpp Brain.hpp Makefile
 	$(command)
 
 clean:

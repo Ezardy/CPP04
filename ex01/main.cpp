@@ -27,6 +27,8 @@ static bool	wrongcat_copy_assignment(void);
 static bool	wrongcat_makeSound(void);
 static bool	wrongcat_as_wronganimal(void);
 static bool	ex00_default(void);
+static bool	animal_array(void);
+static bool	ex01_default(void);
 
 int	main() {
 	bool	success = true;
@@ -54,7 +56,9 @@ int	main() {
 		wrongcat_copy_assignment,
 		wrongcat_makeSound,
 		wrongcat_as_wronganimal,
-		ex00_default
+		ex00_default,
+		animal_array,
+		ex01_default
 	};
 	size_t	tests_count = sizeof(tests) / sizeof(tests[0]);
 	for (size_t i = 0; success && i < tests_count; i += 1) {
@@ -66,14 +70,78 @@ int	main() {
 	return success;
 }
 
+TEST_LOGIC_START(ex01_default)
+	const Animal	*i = NULL;
+	const Animal	*j = NULL;
+
+	try {
+		j = new Dog();
+		i = new Cat();
+	} catch (const std::bad_alloc &e) {
+		success = false;
+	}
+	delete j;
+	delete i;
+
+	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
+		"Dog default constructor was called\n"
+		"Animal constructor was called\n"
+		"Brain default constructor was called\n"
+		"Cat default constructor was called\n"
+		"Brain destructor was called\n"
+		"Dog destructor was called\n"
+		"Animal destructor was called\n"
+		"Brain destructor was called\n"
+		"Cat destructor was called\n"
+		"Animal destructor was called\n";
+TEST_LOGIC_END
+
+TEST_LOGIC_START(animal_array)
+	Animal	*array[10] = {};
+	int i;
+
+	try {
+		for (i = 0; i < 10; i += 2) {
+			array[i] = new Cat();
+			array[i + 1] = new Dog();
+			expected += "Animal constructor was called\n"
+				"Brain default constructor was called\n"
+				"Cat default constructor was called\n"
+				"Animal constructor was called\n"
+				"Brain default constructor was called\n"
+				"Dog default constructor was called\n";
+		}
+		for (i = 0; i < 10; i += 2) {
+			array[i]->makeSound();
+			array[i + 1]->makeSound();
+			expected += "MeowBark";
+		}
+	} catch (const std::bad_alloc &e) {
+		success = false;
+	}
+	for (i = 0; i < 10; i += 2) {
+		delete array[i];
+		delete array[i + 1];
+		expected += "Brain destructor was called\n"
+			"Cat destructor was called\n"
+			"Animal destructor was called\n"
+			"Brain destructor was called\n"
+			"Dog destructor was called\n"
+			"Animal destructor was called\n";
+	}
+TEST_LOGIC_END
+
 TEST_LOGIC_START(ex00_default)
 	const Animal	*meta = NULL;
 	const Animal	*j = NULL;
 	const Animal	*i = NULL;
+
 	try {
 		meta = new Animal();
 		j = new Dog();
 		i = new Cat();
+
 		std::cout << j->getType() << " " << std::endl;
 		std::cout << i->getType() << " " << std::endl;
 		i->makeSound();
@@ -88,13 +156,17 @@ TEST_LOGIC_START(ex00_default)
 
 	expected = "Animal default constructor was called\n"
 		"Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Dog default constructor was called\n"
 		"Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Cat default constructor was called\n"
 		"Dog \n"
 		"Cat \n"
-		"MeowBarkCat destructor was called\n"
+		"MeowBarkBrain destructor was called\n"
+		"Cat destructor was called\n"
 		"Animal destructor was called\n"
+		"Brain destructor was called\n"
 		"Dog destructor was called\n"
 		"Animal destructor was called\n"
 		"Animal destructor was called\n";
@@ -208,6 +280,7 @@ TEST_LOGIC_START(dog_as_animal)
 	static_cast<Animal&>(dog).makeSound();
 	std::cout << '\n';
 	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Dog default constructor was called\n"
 		"BarkBark\n";
 TEST_LOGIC_END
@@ -220,33 +293,68 @@ TEST_LOGIC_START(dog_makeSound)
 	std::cout << '\n';
 
 	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Dog default constructor was called\n"
 		"Dog: Bark\n";
 TEST_LOGIC_END
 
 TEST_LOGIC_START(dog_copy_assignment)
 	Dog	dog;
-	Dog	puppy;
 
-	puppy = dog;
+	{
+		Dog	puppy;
 
-	success = puppy.getType() == "Dog";
-	expected = "Animal constructor was called\n"
+		puppy = dog;
+		dog.barkThroughTranslator();
+		success = puppy.getType() == "Dog"
+			&& dog.barkThroughTranslator() != puppy.barkThroughTranslator();
+	}
+	try {
+		dog.barkThroughTranslator();
+		expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Dog default constructor was called\n"
 		"Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Dog default constructor was called\n"
-		"Dog copy assignment was called\n";
+		"Brain destructor was called\n"
+		"Brain copy constructor was called\n"
+		"Brain copy assignment was called\n"
+		"Dog copy assignment was called\n"
+		"Brain destructor was called\n"
+		"Dog destructor was called\n"
+		"Animal destructor was called\n";
+	} catch(const std::exception &e) {
+		success = false;
+	}
 TEST_LOGIC_END
 
 TEST_LOGIC_START(dog_copy_costructor)
 	Dog	dog;
-	Dog	puppy = dog;
 
-	success = puppy.getType() == "Dog";
-	expected = "Animal constructor was called\n"
-		"Dog default constructor was called\n"
-		"Animal constructor was called\n"
-		"Dog copy constructor was called\n";
+	{
+		Dog	puppy = dog;
+
+		dog.barkThroughTranslator();
+		success = puppy.getType() == "Dog"
+			&& dog.barkThroughTranslator() != puppy.barkThroughTranslator();
+	}
+
+	try {
+		dog.barkThroughTranslator();
+		expected = "Animal constructor was called\n"
+			"Brain default constructor was called\n"
+			"Dog default constructor was called\n"
+			"Animal constructor was called\n"
+			"Brain copy constructor was called\n"
+			"Brain copy assignment was called\n"
+			"Dog copy constructor was called\n"
+			"Brain destructor was called\n"
+			"Dog destructor was called\n"
+			"Animal destructor was called\n";
+	} catch (const std::exception &e) {
+		success = false;
+	}
 TEST_LOGIC_END
 
 TEST_LOGIC_START(dog_construction_destruction) {
@@ -254,7 +362,9 @@ TEST_LOGIC_START(dog_construction_destruction) {
 
 	success = dog.getType() == "Dog";
 	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Dog default constructor was called\n"
+		"Brain destructor was called\n"
 		"Dog destructor was called\n"
 		"Animal destructor was called\n";
 } TEST_LOGIC_END
@@ -266,6 +376,7 @@ TEST_LOGIC_START(cat_as_animal)
 	static_cast<Animal&>(cat).makeSound();
 	std::cout << '\n';
 	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Cat default constructor was called\n"
 		"MeowMeow\n";
 TEST_LOGIC_END
@@ -278,33 +389,69 @@ TEST_LOGIC_START(cat_makeSound)
 	std::cout << '\n';
 
 	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Cat default constructor was called\n"
 		"Cat: Meow\n";
 TEST_LOGIC_END
 
 TEST_LOGIC_START(cat_copy_assignment)
 	Cat	cat;
-	Cat	kitten;
 
-	kitten = cat;
+	{
+		Cat	kitten;
 
-	success = kitten.getType() == "Cat";
-	expected = "Animal constructor was called\n"
-		"Cat default constructor was called\n"
-		"Animal constructor was called\n"
-		"Cat default constructor was called\n"
-		"Cat copy assignment was called\n";
+		kitten = cat;
+		cat.meowThroughTranslator();
+		success = kitten.getType() == "Cat"
+			&& cat.meowThroughTranslator() != kitten.meowThroughTranslator();
+	}
+
+	try {
+		cat.meowThroughTranslator();
+		expected = "Animal constructor was called\n"
+			"Brain default constructor was called\n"
+			"Cat default constructor was called\n"
+			"Animal constructor was called\n"
+			"Brain default constructor was called\n"
+			"Cat default constructor was called\n"
+			"Brain destructor was called\n"
+			"Brain copy constructor was called\n"
+			"Brain copy assignment was called\n"
+			"Cat copy assignment was called\n"
+			"Brain destructor was called\n"
+			"Cat destructor was called\n"
+			"Animal destructor was called\n";
+	} catch (const std::exception &e) {
+		success = false;
+	}
 TEST_LOGIC_END
 
 TEST_LOGIC_START(cat_copy_costructor)
 	Cat	cat;
-	Cat	kitten = cat;
 
-	success = kitten.getType() == "Cat";
-	expected = "Animal constructor was called\n"
-		"Cat default constructor was called\n"
-		"Animal constructor was called\n"
-		"Cat copy constructor was called\n";
+	{
+		Cat	kitten = cat;
+		
+		cat.meowThroughTranslator();
+		success = kitten.getType() == "Cat"
+			&& cat.meowThroughTranslator() != kitten.meowThroughTranslator();
+	}
+
+	try {
+		cat.meowThroughTranslator();
+		expected = "Animal constructor was called\n"
+			"Brain default constructor was called\n"
+			"Cat default constructor was called\n"
+			"Animal constructor was called\n"
+			"Brain copy constructor was called\n"
+			"Brain copy assignment was called\n"
+			"Cat copy constructor was called\n"
+			"Brain destructor was called\n"
+			"Cat destructor was called\n"
+			"Animal destructor was called\n";
+	} catch (const std::exception &e) {
+		success = false;
+	}
 TEST_LOGIC_END
 
 TEST_LOGIC_START(cat_construction_destruction) {
@@ -312,7 +459,9 @@ TEST_LOGIC_START(cat_construction_destruction) {
 
 	success = cat.getType() == "Cat";
 	expected = "Animal constructor was called\n"
+		"Brain default constructor was called\n"
 		"Cat default constructor was called\n"
+		"Brain destructor was called\n"
 		"Cat destructor was called\n"
 		"Animal destructor was called\n";
 } TEST_LOGIC_END

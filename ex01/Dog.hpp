@@ -1,7 +1,8 @@
-#ifndef EX00_DOG_HPP
-# define EX00_DOG_HPP
+#ifndef EX01_DOG_HPP
+# define EX01_DOG_HPP
 
 # include "Animal.hpp"
+# include "Brain.hpp"
 
 class Dog : public Animal {
 public:
@@ -11,6 +12,9 @@ public:
 	~Dog(void);
 
 	void	makeSound(void) const;
+	const std::string	&barkThroughTranslator(void);
+private:
+	Brain	*brain;
 };
 
 #endif
